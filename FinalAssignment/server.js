@@ -1,30 +1,10 @@
 const express = require("express");
-const Sequelize=require("sequelize");
 const routes=require('./Routes');
+const connection=require('./Config')
+
+
 const app = express();
 const port = 3000;
-
-const sequelize = new Sequelize('postgres', 'bhuvanesh', 'testpass', {
-  host: 'localhost',
-  dialect: 'postgres',
-  operatorsAliases: false,
-  pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
-  },
-})
-
-var test = sequelize //Checking if the databse is connected
-.authenticate()
-.then(function() {
-  console.log("CONNECTED! ");
-})
-.catch(function(err) {
-  console.log("error connecting to database");
-})
-.done();
 
 routes.RouteF.auth(app);
 
