@@ -1,0 +1,23 @@
+{
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "finalassignment",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "ajv": "^6.6.1",
+    "ajv-moment": "^2.0.0",
+    "alert-node": "^1.2.2",
+    "chance": "^1.0.16",
+    "cookies": "^0.7.3",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "moment": "^2.22.2",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
