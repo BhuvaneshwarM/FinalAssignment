@@ -1,4 +1,4 @@
-const controller = require(".\\..\\Controller");
+const controller = require(".//..//Controller");
 
 
 module.exports = {

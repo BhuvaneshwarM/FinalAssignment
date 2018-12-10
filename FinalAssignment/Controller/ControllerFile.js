@@ -1,13 +1,13 @@
-var service= require(".\\..\\services");
+var service= require(".//..//Services");
 
 var alert=require('alert-node')
 var crypto=require('crypto');
-
+var path=require('path')
 module.exports={
 
  auth:function(req,res){
 
-     res.sendfile("./views/authPage.html");
+     res.sendfile(path.resolve("Views/authPage.html"));
     
  },   
 
