@@ -1,6 +1,7 @@
-const Sequelize=require("sequelize");
-var path=require('path')
-const createTable=require(path.resolve('./Models'))
+const Sequelize = require("sequelize");
+var path = require('path')
+const createTable = require(path.resolve('./Models'))
+
 const sequelize = new Sequelize('postgres', 'bhuvanesh', 'testpass', {
     host: 'localhost',
     dialect: 'postgres',
@@ -17,18 +18,9 @@ const sequelize = new Sequelize('postgres', 'bhuvanesh', 'testpass', {
 .authenticate()
 .then(function() {
   console.log("CONNECTED! ");
-createTable.Tables.Create(sequelize)
-/*const Credentials = sequelize.define('Credentials', {
-    username: Sequelize.STRING,
-    email: Sequelize.STRING,
-    password: Sequelize.STRING,
-    dob: Sequelize.STRING,
-  })
-  Credentials.sync().then(function(){
-    console.log("credentials table created")
-})*/
-})
 
+createTable.Create(sequelize) //To create user credentials and OTP details
+})
 .catch(function(err) {
   console.log("error connecting to database");
 })

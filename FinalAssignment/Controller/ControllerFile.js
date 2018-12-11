@@ -1,23 +1,23 @@
 var service= require(".//..//Services");
-
-var alert=require('alert-node')
+var models=require(".//..//Models");
+var alert=require('alert-node');
 var crypto=require('crypto');
 var path=require('path')
-module.exports={
+var Promise=require('bluebird')
 
- auth:function(req,res){
 
+ function auth(req,res){
      res.sendfile(path.resolve("Views/authPage.html"));
-    
- },   
+ }  
 
- login:function(req,res)
+ function login(req,res)
  {
      var login={
          username:req.query.username,
          password:req.query.password        
      }
-     let isValid=service.serviceF.loginValidation(login);
+
+     let isValid=service.loginValidation(login);
      if(!isValid){ 
          alert("Invalid datatype for login")
          res.redirect('/')
@@ -28,72 +28,72 @@ module.exports={
           let encrypt=cipher.update(login.password,'utf8','hex');
           encrypt+=cipher.final('hex');
           login.password=encrypt;
-
-
+          
+          var authenticate=Promise.promisify(service.authenticate);
+          authenticate(login).then(userId=>{
+              console.log("*******"+userId)
+          })
         //find username and obtain userId and password from database. compare
-        if(login.password=='23967f7ae5c1820f4bc33ffb1e3b55aa')
+        /*if(login.password=='23967f7ae5c1820f4bc33ffb1e3b55aa')
         {
-            service.serviceF.tokenCreation(signp.username,req,res);
+            service.tokenCreation(signp.username,req,res);
             res.redirect('/');
             //redirect to homepage with userId as query 
-        }
+        }*/
           
       }
       res.end()
 
- },
- signup:function(req,res)
+ }
+
+ function signup(req,res)
  {
-     var signp={
+     var signupDetails={
          username:req.query.username,
          password:req.query.password,
          email:req.query.email,
          dob:req.query.DOB
       }
-
-   let isValid=service.serviceF.signupValidation(signp);
+   let isValid = service.signupValidation(signupDetails);
    if(!isValid){ 
        alert("Invalid datatype for signup")
        res.redirect('/')
      }
-    else{
-    
+    else{    
         var cipher = crypto.createCipher('aes192', 'mypassword');
         let encrypt=cipher.update("someu",'utf8','hex');
         encrypt+=cipher.final('hex');
-        signp.password=encrypt;
-        
-        service.serviceF.tokenCreation(signp.username,req,res);
-        res.redirect('/homepage');
-        //put username and password inside database and obtain the Id 
-        
-        //after obtaining the Id create token 
-        
-        //redirect to homepage with Id in the query 
+        signupDetails.password = encrypt;
+
+        var TableEntry=Promise.promisify(service.EnterDB)
+
+        TableEntry(signupDetails).then(userId=>{
+    
+        service.tokenCreation(signupDetails.username,req,res);
+        res.redirect('/homepage?UserId='+userId);        
+        });
         
        }
-    res.end()
+    
+    }
 
 
-
-
-
- },
- homepage:function(req,res)
+ function homepage(req,res)
  {
    let userId=req.query.userId;
-   if(!service.serviceF.tokenChecking(req,res)){
+   if(!service.tokenChecking(req,res)){
     alert("you have not authorised yourself")
     res.redirect('/');}
    else{
-        
+        res.end()
     
    }
    
    //if logout , delete token(middleware)
    //if otp generated with button , store in db with moment() time and date
    
- },
+ }
 
-
+ module.exports={
+    auth,login,signup,homepage
 }

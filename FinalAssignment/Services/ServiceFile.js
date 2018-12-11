@@ -1,14 +1,18 @@
-var Ajv=require('ajv');
-var {plugin}=require('ajv-moment')
-var moment=require('moment')
-var jwt=require('jsonwebtoken');
+var Ajv = require('ajv');
+var {plugin} = require('ajv-moment')
+var moment = require('moment')
+var jwt = require('jsonwebtoken');
 var Cookies = require('cookies')
+var path = require('path')
+var Tables = require(path.resolve('./Models'))
+var Promise = require("bluebird");
+
+
 var ajv=new Ajv();
 plugin({ajv,moment});
-module.exports={
 
-    signupValidation:function(signp){
-    let schema={
+    function signupValidation(signup){
+    let schema = {
         "type":"object",
         "properties":{
             "username":{"type":"string"},
@@ -21,11 +25,11 @@ module.exports={
         },
         "required": ["username","password","email","dob"] 
     }
-    const isValid=ajv.validate(schema,signp);  
+    const isValid=ajv.validate(schema,signup);  
     return isValid
-    },
+    }
 
-    loginValidation:function(login){
+    function loginValidation(login){
         let schema={
             "type":"object",
             "properties":
@@ -37,17 +41,17 @@ module.exports={
     let isValid=ajv.validate(schema,login);
     return isValid
 
-    },
+    }
 
-    tokenCreation:function(user,req,res){
+    function tokenCreation(user,req,res){
         let token= jwt.sign({username:user},"TokenKey");
      let keys = ['cookie key']
      let cookies = new Cookies(req, res, { keys: keys })
      cookies.set('AuthenticatedToken',token, { signed: true })
      //var lastVisit = cookies.get('LastVisit', { signed: true }
-    },
+    }
 
-    tokenChecking:function(req,res)
+    function tokenChecking(req,res)
     {
         let keys = ['cookie key']
         let cookies = new Cookies(req, res, { keys: keys })
@@ -62,13 +66,32 @@ module.exports={
                }
         }) 
         return isValid
-   },
+   }
 
-   tokenDeletion:function(){
+   function tokenDeletion(){
     var keys = ['cookie key']
     var cookies = new Cookies(req, res, { keys: keys })
     cookies.set('AuthenticatedToken',"not authenticated", { signed: true })
    }
+    
+  function EnterDB(signup,callbac){
+     
+      let Credentials= Tables.Credentials;
+      let OTP=Tables.OTP;
+      let userId;
+      var TableEntry = Promise.promisify(Tables.enter);
+      TableEntry(signup).then(data=>{
+          callbac(null,data);
+    });      
 
+    }
 
+    function authenticate(login,callback)
+    {
+        
+        callback(null,5)//data to be obtained from database
+    }
+
+   module.exports = {
+    signupValidation,loginValidation,tokenChecking,tokenCreation,tokenDeletion,EnterDB,authenticate
 }

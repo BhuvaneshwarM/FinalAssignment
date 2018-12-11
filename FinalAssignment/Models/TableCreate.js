@@ -1,33 +1,48 @@
-var path=require('path')
 
-var Sequelize=require('sequelize')
 
-function Create(sequelize){    
-    const Credentials = sequelize.define('Credentials', {
+var Sequelize = require('sequelize')
+
+var Credentials;
+var OTP;
+function Create(sequelize) {
+    Credentials = sequelize.define('Credentials', {
         username: Sequelize.STRING,
         email: Sequelize.STRING,
         password: Sequelize.STRING,
         dob: Sequelize.STRING,
-      })
-      const OTP = sequelize.define("OTP", {//defining projects model
+    })
+
+    OTP = sequelize.define("OTP", {
         Code: { type: Sequelize.STRING }
-      });
-      
-      OTP.belongsTo(Credentials);
-    Credentials.sync().then(function(){
+    });
+
+    OTP.belongsTo(Credentials);
+    Credentials.sync().then(function () {
         console.log("credentials table created")
-        OTP.sync().then(function(){
+        OTP.sync().then(function () {
             console.log("OTP table created")
         })
+
     })
-    
-    
+}
+function enter(signup,callback) {
+    let UserId;
+    Credentials.sync().then(function () {
+        return Credentials.create(signup).then(function () {
+            Credentials.findOne({ limit: 1, where: {}, order: [['id', 'DESC']] }).then(userId => {
+                UserId = userId.id;
+                callback(null,UserId);
+            })
+        });
+    })
+    return UserId;
+}
+
+function authenticate(login,callback){
 
 
-    }
+}
 
-module.exports={
-    Create,
-
-
+module.exports = {
+    Create, enter
 }

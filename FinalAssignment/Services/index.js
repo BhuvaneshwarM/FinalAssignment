@@ -1,5 +1,3 @@
-var serviceF=require("./ServiceFile.js");
+//var serviceF=require("./ServiceFile.js");
 
-module.exports={
-    serviceF
-}
+module.exports=require("./ServiceFile.js");

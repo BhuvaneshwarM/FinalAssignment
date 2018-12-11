@@ -1,6 +1,7 @@
 const express = require("express");
-const routes=require('./Routes');
-const connection=require('./Config')
+const connection = require('./Config')
+const routes = require('./Routes');
+
 
 
 const app = express();
@@ -17,6 +18,6 @@ routes.RouteF.homepage(app);
 
 
 module.exports = app.listen(port, () =>          //Make the server listen in the port 3000
-  console.log("App is listening to the port 3000")
+  console.log("App is listening to the port 3001")
 );
 

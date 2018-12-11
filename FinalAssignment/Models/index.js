@@ -1,5 +1,3 @@
-var Tables=require('./TableCreate.js')
 
-module.exports={
-    Tables
-}
+
+module.exports = require('./TableCreate.js')
