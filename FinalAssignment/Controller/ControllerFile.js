@@ -22,8 +22,7 @@ var Promise=require('bluebird')
          alert("Invalid datatype for login")
          res.redirect('/')
        }
-      else{
-          
+      else{ 
           var cipher = crypto.createCipher('aes192', 'mypassword');
           let encrypt=cipher.update(login.password,'utf8','hex');
           encrypt+=cipher.final('hex');
@@ -32,7 +31,12 @@ var Promise=require('bluebird')
           var authenticate=Promise.promisify(service.authenticate);
           authenticate(login).then(userId=>{
               console.log("*******"+userId)
-          })
+              res.redirect('/homepage?UserId='+userId); 
+          }).catch(error=>{
+              
+            alert(error)
+            res.redirect('/')
+         })
         //find username and obtain userId and password from database. compare
         /*if(login.password=='23967f7ae5c1820f4bc33ffb1e3b55aa')
         {
@@ -42,7 +46,7 @@ var Promise=require('bluebird')
         }*/
           
       }
-      res.end()
+      
 
  }
 
@@ -61,7 +65,7 @@ var Promise=require('bluebird')
      }
     else{    
         var cipher = crypto.createCipher('aes192', 'mypassword');
-        let encrypt=cipher.update("someu",'utf8','hex');
+        let encrypt=cipher.update(signupDetails.password,'utf8','hex');
         encrypt+=cipher.final('hex');
         signupDetails.password = encrypt;
 
@@ -70,8 +74,12 @@ var Promise=require('bluebird')
         TableEntry(signupDetails).then(userId=>{
     
         service.tokenCreation(signupDetails.username,req,res);
-        res.redirect('/homepage?UserId='+userId);        
-        });
+        res.redirect('/homepage?UserId='+userId);     
+           
+        }).catch(error=>{
+            alert(error)
+            res.redirect('/')
+        })
         
        }
     

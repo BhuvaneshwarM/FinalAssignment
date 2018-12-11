@@ -82,14 +82,19 @@ plugin({ajv,moment});
       var TableEntry = Promise.promisify(Tables.enter);
       TableEntry(signup).then(data=>{
           callbac(null,data);
-    });      
-
+    }).catch(error=>{callbac(error,null)})     
     }
 
     function authenticate(login,callback)
     {
+        var authenticat=Promise.promisify(Tables.authenticate)
+        authenticat(login).then(Userid=>{
+            callback(null,Userid);
+        }).catch(error=>{
+           
+            callback(error,null)
+        })
         
-        callback(null,5)//data to be obtained from database
     }
 
    module.exports = {
