@@ -1,8 +1,11 @@
 doctype html
 html
     head
-        h1= message
+        h1= userId
 body
-
-
-  
+    form(action="/OTP" id=otp)
+        input(type="hidden" name="userId" value=userId)
+        button(type="submit" id="generate") generate code
+    form(action='/logout' id=logout)
+        button(type="submit" id="login") logout
+            

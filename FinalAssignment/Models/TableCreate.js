@@ -42,6 +42,16 @@ function enter(signup,callback) {
     
 }
 
+function enterCodeDB(code,userId,callback)
+{
+    OTP.sync().then(function(){
+        
+        return OTP.create({Code:code,CredentialId:userId}).then(()=>{
+            callback(null,"otp entered");
+        })
+    })
+}
+
 function authenticate(login,callback){
 
 Credentials.findOne({limit:1,where:{username:login.username}}).then(userDetails=>{
@@ -64,5 +74,5 @@ else{
 }
 
 module.exports = {
-    Create, enter,authenticate
+    Create, enter,authenticate,enterCodeDB
 }

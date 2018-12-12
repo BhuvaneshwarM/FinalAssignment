@@ -4,7 +4,8 @@ var alert=require('alert-node');
 var crypto=require('crypto');
 var path=require('path')
 var Promise=require('bluebird')
-
+var Chance=require('chance');  //Chance library used for the generation of code 
+var chance=new Chance();
 
  function auth(req,res){
      res.sendfile(path.resolve("Views/authPage.html"));
@@ -31,7 +32,7 @@ var Promise=require('bluebird')
           var authenticate=Promise.promisify(service.authenticate);
           authenticate(login).then(userId=>{
               console.log("*******"+userId)
-              res.redirect('/homepage?UserId='+userId); 
+              res.redirect('/homepage?userId='+userId); 
           }).catch(error=>{
               
             alert(error)
@@ -62,41 +63,50 @@ var Promise=require('bluebird')
         signupDetails.password = encrypt;
 
         var TableEntry=Promise.promisify(service.EnterDB)
-
         TableEntry(signupDetails).then(userId=>{
     
         service.tokenCreation(signupDetails.username,req,res);
-        res.redirect('/homepage?UserId='+userId);     
+        res.redirect('/homepage?userId='+userId);     
 
         }).catch(error=>{
             alert(error)
             res.redirect('/')
         })
         
-       }
-    
+       }   
     }
 
 
  function homepage(req,res)
  {
-   let userId=req.query.userId;
+   var userId=req.query.userId;
    if(!service.tokenChecking(req,res)){
     alert("you have not authorised yourself")
     res.redirect('/');}
    else{
-    var name = 'hello';
-
-res.render(path.resolve("Views/homePage.pug"), {message: 'message sent from server'})
-        //res.end()
-    
+             
+        res.render(path.resolve("Views/homePage.pug"), {OTP: 'message sent from server',userId:userId})
    }
    
    //if logout , delete token(middleware)
    //if otp generated with button , store in db with moment() time and date
-   
- }
+}
+
+function CodeGen(req,res){
+    var userId=req.query.userId;
+    let code=chance.integer({ min: 10000, max: 99999 })
+    var CodeEntry=Promise.promisify(service.EnterCode)
+    CodeEntry(code,userId).then(status=>{
+        console.log(status);
+        res.redirect('/homepage?userId='+userId)
+    })
+
+}
+
+function logout(req,res){
+
+}
 
  module.exports={
-    auth,login,signup,homepage
+    auth,login,signup,homepage,CodeGen,logout
 }

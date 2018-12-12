@@ -7,13 +7,20 @@ const routes = require('./Routes');
 const app = express();
 const port = 3000;
 app.set('view engine', 'pug')
-routes.RouteF.auth(app);
 
-routes.RouteF.signup(app);
+routes.auth(app);
 
-routes.RouteF.login(app);
+routes.signup(app);
 
-routes.RouteF.homepage(app);
+routes.login(app);
+
+routes.homepage(app);
+
+routes.OTP(app);
+
+routes.logout(app);
+
+
 
 
 

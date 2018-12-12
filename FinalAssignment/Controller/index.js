@@ -1,5 +1,3 @@
-var ControlF = require("./ControllerFile");
+ 
 
-module.exports = {
-  ControlF
-};
+module.exports = require("./ControllerFile");

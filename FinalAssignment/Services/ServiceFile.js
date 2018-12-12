@@ -96,6 +96,15 @@ plugin({ajv,moment});
         
     }
 
+    function EnterCode(code,userId,callback)
+    {
+    var EnterCode= Promise.promisify(Tables.enterCodeDB);
+    EnterCode(code,userId).then(status=>{
+        callback(null,status);
+    })
+
+    }
    module.exports = {
-    signupValidation,loginValidation,tokenChecking,tokenCreation,tokenDeletion,EnterDB,authenticate
+    signupValidation,loginValidation,tokenChecking,tokenCreation,tokenDeletion,EnterDB,authenticate,EnterCode
 }
+

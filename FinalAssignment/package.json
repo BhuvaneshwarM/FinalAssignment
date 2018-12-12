@@ -10,7 +10,7 @@
     "ajv-moment": "^2.0.0",
     "alert-node": "^1.2.2",
     "bluebird": "^3.5.3",
-    "chance": "^1.0.16",
+    "chance": "^1.0.18",
     "cookies": "^0.7.3",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
