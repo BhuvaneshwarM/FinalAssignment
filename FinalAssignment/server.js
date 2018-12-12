@@ -6,7 +6,7 @@ const routes = require('./Routes');
 
 const app = express();
 const port = 3000;
-
+app.set('view engine', 'pug')
 routes.RouteF.auth(app);
 
 routes.RouteF.signup(app);

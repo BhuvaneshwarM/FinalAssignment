@@ -48,7 +48,6 @@ plugin({ajv,moment});
      let keys = ['cookie key']
      let cookies = new Cookies(req, res, { keys: keys })
      cookies.set('AuthenticatedToken',token, { signed: true })
-     //var lastVisit = cookies.get('LastVisit', { signed: true }
     }
 
     function tokenChecking(req,res)

@@ -36,15 +36,7 @@ var Promise=require('bluebird')
               
             alert(error)
             res.redirect('/')
-         })
-        //find username and obtain userId and password from database. compare
-        /*if(login.password=='23967f7ae5c1820f4bc33ffb1e3b55aa')
-        {
-            service.tokenCreation(signp.username,req,res);
-            res.redirect('/');
-            //redirect to homepage with userId as query 
-        }*/
-          
+         })      
       }
       
 
@@ -75,7 +67,7 @@ var Promise=require('bluebird')
     
         service.tokenCreation(signupDetails.username,req,res);
         res.redirect('/homepage?UserId='+userId);     
-           
+
         }).catch(error=>{
             alert(error)
             res.redirect('/')
@@ -93,7 +85,10 @@ var Promise=require('bluebird')
     alert("you have not authorised yourself")
     res.redirect('/');}
    else{
-        res.end()
+    var name = 'hello';
+
+res.render(path.resolve("Views/homePage.pug"), {message: 'message sent from server'})
+        //res.end()
     
    }
    
