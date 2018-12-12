@@ -1,7 +1,7 @@
-
-
 var Sequelize = require('sequelize')
-
+var moment=require('moment');
+var CurrentTime=moment();
+var expiryTime=CurrentTime.subtract({ 'minutes':40})
 var Credentials;
 var OTP;
 function Create(sequelize) {
@@ -42,15 +42,6 @@ function enter(signup,callback) {
     
 }
 
-function enterCodeDB(code,userId,callback)
-{
-    OTP.sync().then(function(){
-        
-        return OTP.create({Code:code,CredentialId:userId}).then(()=>{
-            callback(null,"otp entered");
-        })
-    })
-}
 
 function authenticate(login,callback){
 
@@ -73,6 +64,27 @@ else{
    })
 }
 
+function enterCodeDB(code,userId,callback)
+{
+    OTP.sync().then(function(){
+        
+        return OTP.create({Code:code,CredentialId:userId}).then(()=>{
+            callback(null,"otp entered");
+        })
+    })
+}
+function GetCode(userId,callback)
+{   
+    console.log("**********");
+    OTP.findAll({raw:true,attributes:['Code'],
+    where: {CredentialId:userId,createdAt:{[Sequelize.Op.gte]:expiryTime}}, 
+    order: [['createdAt', 'DESC']]}).then(Codes=> {
+        console.log(Codes)
+        callback(null,Codes)
+    })
+   
+
+}
 module.exports = {
-    Create, enter,authenticate,enterCodeDB
+    Create, enter,authenticate,GetCode,enterCodeDB
 }

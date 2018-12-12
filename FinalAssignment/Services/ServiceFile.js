@@ -104,7 +104,13 @@ plugin({ajv,moment});
     })
 
     }
+    function GetCode(userId,callback)
+    {
+        var GetCode=Promise.promisify(Tables.GetCode);
+        GetCode(userId).then(Codes=>{callback(null,Codes)});
+
+    }
    module.exports = {
-    signupValidation,loginValidation,tokenChecking,tokenCreation,tokenDeletion,EnterDB,authenticate,EnterCode
+    signupValidation,loginValidation,tokenChecking,tokenCreation,tokenDeletion,EnterDB,authenticate,EnterCode,GetCode
 }
 

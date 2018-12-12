@@ -84,8 +84,12 @@ var chance=new Chance();
     alert("you have not authorised yourself")
     res.redirect('/');}
    else{
-             
-        res.render(path.resolve("Views/homePage.pug"), {OTP: 'message sent from server',userId:userId})
+        var GetCode=Promise.promisify(service.GetCode);
+        GetCode(userId).then(Codes=>{
+            console.log(Codes);
+            res.render(path.resolve("Views/homePage.pug"), {OTP:Codes ,userId:userId})   
+        })     
+        
    }
    
    //if logout , delete token(middleware)
