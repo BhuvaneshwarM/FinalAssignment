@@ -73,6 +73,8 @@ function enterCodeDB(code, userId, callback) { //Entering code into DB
         })
     })
 }
+
+
 function GetCode(userId, callback) { //fetch code from DB
 
     OTP.findAll({
@@ -86,6 +88,8 @@ function GetCode(userId, callback) { //fetch code from DB
 
 
 }
+
+
 module.exports = {
     Create,
     enter, authenticate,
