@@ -4,7 +4,7 @@ var CurrentTime = moment();
 var expiryTime = CurrentTime.subtract({ 'minutes': 180 })
 var Credentials;
 var OTP;
-function Create(sequelize) {
+function Create(sequelize) {   //Creating the database models
     Credentials = sequelize.define('Credentials', {
         username: Sequelize.STRING,
         email: Sequelize.STRING,
@@ -26,7 +26,7 @@ function Create(sequelize) {
     })
 }
 
-function enter(signup, callback) {
+function enter(signup, callback) { //entering user credentials into DB and ensuring that no username is taken twice to avoid conflict
     let UserId;
     Credentials.findOne({ limit: 1, where: { username: signup.username } }).then(userDetails => {
         if (userDetails != null) { callback("username already taken", null); }
@@ -45,7 +45,7 @@ function enter(signup, callback) {
 }
 
 
-function authenticate(login, callback) {
+function authenticate(login, callback) { //authenticate user credentials during login
 
     Credentials.findOne({ limit: 1, where: { username: login.username } }).then(userDetails => {
         console.log(userDetails.username, login.username, userDetails.password, login.password)
@@ -65,7 +65,7 @@ function authenticate(login, callback) {
     })
 }
 
-function enterCodeDB(code, userId, callback) {
+function enterCodeDB(code, userId, callback) { //Entering code into DB
     OTP.sync().then(function () {
 
         return OTP.create({ Code: code, CredentialId: userId }).then(() => {
@@ -73,7 +73,7 @@ function enterCodeDB(code, userId, callback) {
         })
     })
 }
-function GetCode(userId, callback) {
+function GetCode(userId, callback) { //fetch code from DB
 
     OTP.findAll({
         raw: true, attributes: ['Code'],

@@ -2,13 +2,11 @@ const express = require("express");
 const connection = require('./Config')
 const routes = require('./Routes');
 
-
-
 const app = express();
 const port = 3000;
 app.set('view engine', 'pug')
 
-routes.auth(app);
+routes.auth(app);//Login and signup page
 
 routes.signup(app);
 
@@ -16,7 +14,7 @@ routes.login(app);
 
 routes.homepage(app);
 
-routes.OTP(app);
+routes.OTP(app);//Code generation
 
 routes.logout(app);
 
