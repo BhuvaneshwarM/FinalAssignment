@@ -20,10 +20,6 @@ routes.OTP(app);
 
 routes.logout(app);
 
-
-
-
-
 module.exports = app.listen(port, () =>          //Make the server listen in the port 3000
   console.log("App is listening to the port 3001")
 );

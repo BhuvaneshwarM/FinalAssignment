@@ -1,7 +1,7 @@
-const authPage=require('./authPage.html')
-const homePage=require('./homePage.html')
+const authPage = require('./authPage.html')
+const homePage = require('./homePage.html')
 
-module.exports={
+module.exports = {
 
-    authPage,homePage
+    authPage, homePage
 }

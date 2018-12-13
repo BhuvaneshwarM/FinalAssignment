@@ -1,7 +1,7 @@
 var Sequelize = require('sequelize')
-var moment=require('moment');
-var CurrentTime=moment();
-var expiryTime=CurrentTime.subtract({ 'minutes':40})
+var moment = require('moment');
+var CurrentTime = moment();
+var expiryTime = CurrentTime.subtract({ 'minutes': 180 })
 var Credentials;
 var OTP;
 function Create(sequelize) {
@@ -26,65 +26,69 @@ function Create(sequelize) {
     })
 }
 
-function enter(signup,callback) {
+function enter(signup, callback) {
     let UserId;
-    Credentials.findOne({limit:1,where:{username:signup.username}}).then(userDetails=>{ 
-        if(userDetails!= null){ callback("username already taken",null);}        
-     else{
-    Credentials.sync().then(function () {
-        return Credentials.create(signup).then(function () {
-            Credentials.findOne({ limit: 1, where: {}, order: [['id', 'DESC']] }).then(userId => {
-                UserId = userId.id;
-                callback(null,UserId);
+    Credentials.findOne({ limit: 1, where: { username: signup.username } }).then(userDetails => {
+        if (userDetails != null) { callback("username already taken", null); }
+        else {
+            Credentials.sync().then(function () {
+                return Credentials.create(signup).then(function () {
+                    Credentials.findOne({ limit: 1, where: {}, order: [['id', 'DESC']] }).then(userId => {
+                        UserId = userId.id;
+                        callback(null, UserId);
+                    })
+                });
             })
-        });
-    })} })
-    
+        }
+    })
+
 }
 
 
-function authenticate(login,callback){
+function authenticate(login, callback) {
 
-Credentials.findOne({limit:1,where:{username:login.username}}).then(userDetails=>{
-    console.log(userDetails.username,login.username ,userDetails.password,login.password)
-    if(userDetails.username == login.username && userDetails.password == login.password)
-    {
-     console.log("********************credentials are correct");
-       callback(null,userDetails.id); 
-   
-}
-else{
-    console.log("********************credentials are wrong");
-    callback("entered credentials not matching",null);
-}
-}
-).catch(()=>{
-    console.log("user not available")
-    callback("not able to find the entered username",null);
-   })
+    Credentials.findOne({ limit: 1, where: { username: login.username } }).then(userDetails => {
+        console.log(userDetails.username, login.username, userDetails.password, login.password)
+        if (userDetails.username == login.username && userDetails.password == login.password) {
+            console.log("********************credentials are correct");
+            callback(null, userDetails.id);
+
+        }
+        else {
+            console.log("********************credentials are wrong");
+            callback("entered credentials not matching", null);
+        }
+    }
+    ).catch(() => {
+        console.log("user not available")
+        callback("not able to find the entered username", null);
+    })
 }
 
-function enterCodeDB(code,userId,callback)
-{
-    OTP.sync().then(function(){
-        
-        return OTP.create({Code:code,CredentialId:userId}).then(()=>{
-            callback(null,"otp entered");
+function enterCodeDB(code, userId, callback) {
+    OTP.sync().then(function () {
+
+        return OTP.create({ Code: code, CredentialId: userId }).then(() => {
+            callback(null, "otp entered");
         })
     })
 }
-function GetCode(userId,callback)
-{   
-    console.log("**********");
-    OTP.findAll({raw:true,attributes:['Code'],
-    where: {CredentialId:userId,createdAt:{[Sequelize.Op.gte]:expiryTime}}, 
-    order: [['createdAt', 'DESC']]}).then(Codes=> {
-        console.log(Codes)
-        callback(null,Codes)
+function GetCode(userId, callback) {
+
+    OTP.findAll({
+        raw: true, attributes: ['Code'],
+        where: { CredentialId: userId, createdAt: { [Sequelize.Op.gte]: expiryTime } },
+        order: [['createdAt', 'DESC']]
+    }).then(Codes => {
+
+        callback(null, Codes)
     })
-   
+
 
 }
 module.exports = {
-    Create, enter,authenticate,GetCode,enterCodeDB
+    Create,
+    enter, authenticate,
+    GetCode,
+    enterCodeDB
 }
